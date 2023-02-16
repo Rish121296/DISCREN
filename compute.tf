@@ -16,7 +16,7 @@ resource "aws_instance" "public-webserver1" {
         EOF
 
   tags = {
-    "Name" = "DevWebServer-1"
+    "Name" = "PRODWebServer-1"
   }
 }
 
@@ -38,7 +38,7 @@ resource "aws_instance" "public-webserver2" {
         EOF
 
   tags = {
-    "Name" = "DevWebServer-2"
+    "Name" = "PRODWebServer-2"
   }
 }
 
