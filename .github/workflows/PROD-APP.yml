@@ -1,35 +1,41 @@
-name: DISCERN-AIRFLOW-APP CI-CD
-
-on:
-  push:
-    branches: [ "main" ]
-
+---
+name: Deploy to Airflow PROD
+on: workflow_dispatch
+env:
+  AWS_ACCESS_KEY_ID: AWS_ACCESS_KEY_ID
+  AWS_SECRET_ACCESS_KEY: AWS_SECRET_ACCESS_KEY
+  AWS_REGION: AWS_REGION
 jobs:
-  deploy:
-   name: deploy-airflow-prod-job-to-ec2    
-   runs-on: ubuntu-latest 
-   steps:       
-    - name: Setup Terraform Here       
-      uses: hashicorp/setup-terraform@v1        
-      with:          
-       terraform_version: 1.0.9  
+  deploy-prod:
+    name: deploy-airflow-prod-job-to-ec2
+    runs-on: ubuntu-latest
+    steps:
+      - name: check user permission
+        uses: 74th/workflow-permission-action@1.0.0
+        with:
+          users: Rish121296
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.0.9
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1.6.1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      - name: Deploy to my EC2 instance
+        uses: easingthemes/ssh-deploy@v2.1.5
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.DISCERN_STREAM_EC2_SSH_KEY }}
+          SOURCE: ./
+          REMOTE_HOST: ${{ secrets.DISCERN_STREAM_EC2_DNS }}
+          REMOTE_USER: ec2-user
+          TARGET: /home/ec2-user/airflow-prod
+      - name: Deploy
+        run: |
+          
+          cd airflow/prod && terraform init && terraform apply --auto-approve
       
-   - name: Configure AWS credentials
-     uses: aws-actions/configure-aws-credentials@v1.6.1        
-     with:          
-      aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}          
-      aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}          
-      aws-region: ${{ secrets.AWS_REGION }}
-      
-   - name: Deploy to my EC2 instance        
-     uses: easingthemes/ssh-deploy@v2.1.5       
-     env:          
-      SSH_PRIVATE_KEY: ${{ secrets.DISCERN_STREAM_EC2_SSH_KEY }}         
-      SOURCE: "./"          
-      REMOTE_HOST: ${{ secrets.DISCERN_STREAM_EC2_DNS }}          
-      REMOTE_USER: "ubuntu"          
-      TARGET: "/home/ubuntu/airflow-prod" 
-      
-   - name: Deploy       
-     run: |          
-      cd airflow/prod && terraform init && terraform apply --auto-approve
