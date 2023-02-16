@@ -6,7 +6,6 @@ resource "aws_instance" "public-webserver1" {
   vpc_security_group_ids      = [aws_security_group.public-webserver-one-sg.id]
   subnet_id                   = aws_subnet.devsubnetpublic1.id
   associate_public_ip_address = true
-  count = 2
   user_data = <<-EOF
         #!/bin/bash
         yum update -y
@@ -17,7 +16,7 @@ resource "aws_instance" "public-webserver1" {
         EOF
 
   tags = {
-    Name = var.servers[count.index]
+    "Name" = "DevWebServer-1"
   }
 }
 
@@ -39,7 +38,7 @@ resource "aws_instance" "public-webserver2" {
         EOF
 
   tags = {
-    Name = var.servers[count.index]
+    "Name" = "DevWebServer-2"
   }
 }
 
