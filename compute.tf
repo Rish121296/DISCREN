@@ -1,8 +1,8 @@
 resource "aws_instance" "public-webserver1" {
   ami           = data.aws_ami.dev-webservers.id
-  instance_type = var.instance_type["0,1"]
+  instance_type = t2.micro
   key_name          = "terraform-kp"
-  availability_zone = var.az["0,1"]
+  availability_zone = ap-south-1a
   vpc_security_group_ids      = [aws_security_group.public-webserver-one-sg.id]
   subnet_id                   = aws_subnet.devsubnetpublic1.id
   associate_public_ip_address = true
@@ -21,9 +21,9 @@ resource "aws_instance" "public-webserver1" {
   }
 }
 
-/*resource "aws_instance" "public-webserver2" {
+resource "aws_instance" "public-webserver2" {
   ami           = data.aws_ami.dev-webservers.id
-  instance_type = var.instance_type
+  instance_type = t2.small
   key_name          = "terraform-kp"
   availability_zone = "ap-south-1b"
   vpc_security_group_ids      = [aws_security_group.public-webserver-one-sg.id]
@@ -39,9 +39,9 @@ resource "aws_instance" "public-webserver1" {
         EOF
 
   tags = {
-    Name = "Dev-PublicWebserver2"
+    Name = var.servers[count.index]
   }
-}*/
+}
 
 resource "aws_lb" "dev-alb" {
     name = "dev-alb"
