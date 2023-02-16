@@ -40,5 +40,5 @@ jobs:
       - name: Deploy
         run: |
           
-          cd airflow/prod && terraform init && terraform apply --auto-approve
+          cd airflow-prod && terraform init && terraform apply --auto-approve
       
