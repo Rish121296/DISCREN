@@ -9,7 +9,7 @@ jobs:
    name: deploy-airflow-prod-job-to-ec2    
    runs-on: ubuntu-latest 
    steps:       
-    - name: Setup Terraform        
+    - name: Setup Terraform Here       
       uses: hashicorp/setup-terraform@v1        
       with:          
        terraform_version: 1.0.9  
