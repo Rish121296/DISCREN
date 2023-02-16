@@ -35,8 +35,8 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.DISCERN_STREAM_EC2_SSH_KEY }}
           SOURCE: ./
           REMOTE_HOST: ${{ secrets.DISCERN_STREAM_EC2_DNS }}
-          REMOTE_USER: ec2-user
-          TARGET: /home/ec2-user/airflow-prod
+          REMOTE_USER: ubuntu
+          TARGET: /home/ubuntu/airflow-prod
       - name: Deploy
         run: |
           
