@@ -1,8 +1,8 @@
 resource "aws_instance" "public-webserver1" {
   ami           = data.aws_ami.dev-webservers.id
-  instance_type = t2.micro
+  instance_type = "t2.micro"
   key_name          = "terraform-kp"
-  availability_zone = ap-south-1a
+  availability_zone = "ap-south-1a"
   vpc_security_group_ids      = [aws_security_group.public-webserver-one-sg.id]
   subnet_id                   = aws_subnet.devsubnetpublic1.id
   associate_public_ip_address = true
@@ -23,7 +23,7 @@ resource "aws_instance" "public-webserver1" {
 
 resource "aws_instance" "public-webserver2" {
   ami           = data.aws_ami.dev-webservers.id
-  instance_type = t2.small
+  instance_type = "t2.small"
   key_name          = "terraform-kp"
   availability_zone = "ap-south-1b"
   vpc_security_group_ids      = [aws_security_group.public-webserver-one-sg.id]
